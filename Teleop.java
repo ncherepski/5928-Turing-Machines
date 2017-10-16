@@ -1,23 +1,17 @@
 /*
 Copyright (c) 2016 Robert Atkinson
-
 All rights reserved.
-
 Redistribution and use in source and binary forms, with or without modification,
 are permitted (subject to the limitations in the disclaimer below) provided that
 the following conditions are met:
-
 Redistributions of source code must retain the above copyright notice, this list
 of conditions and the following disclaimer.
-
 Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
-
 Neither the name of Robert Atkinson nor the names of his contributors may be used to
 endorse or promote products derived from this software without specific prior
 written permission.
-
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -35,10 +29,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.BotClass;
 
-import org.firstinspires.ftc.teamcode.Bot;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -46,7 +39,7 @@ import org.firstinspires.ftc.teamcode.Bot;
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
+ * This particular OpMode just executes a basic Tank Drive teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
@@ -54,12 +47,12 @@ import org.firstinspires.ftc.teamcode.Bot;
  */
 
 @TeleOp(name="Template: Iterative OpMode", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+
 public class Teleop extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private botClass turingBot = new botClass();
+    private BotClass turingBot = new BotClass();
     // private DcMotor leftMotor = null;
     // private DcMotor rightMotor = null;
 
@@ -114,19 +107,19 @@ public class Teleop extends OpMode
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         if (rightY >= .5){
             if (leftY >= .5) {
-                turingBot.forward();
+                turingBot.forward(0.75); //these forward backward commands run at 75% power
             } else if (leftY <= -.5){
-                turingBot.leftTurn();
+                turingBot.leftTurn(0.50); // turns run at 50%
             }
         } else if (leftY >= .5) {
             if (rightY >= .5) {
-                turingBot.forward();
+                turingBot.forward(.75); //these forward backward commands run at 75% power
             } else if (rightY <= -.5) {
-                turingBot.rightTurn();
+                turingBot.rightTurn(0.50); // turns run at 50%
             }
         } else if (leftY <= -.5) {
             if (rightY <= -.5){
-                turingBot.backward();
+                turingBot.backward(0.75); //these forward backward commands run at 75% power
             }
         }
     }
