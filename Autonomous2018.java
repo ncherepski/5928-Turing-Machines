@@ -84,6 +84,8 @@ public class Autonomous2018 extends LinearOpMode {
         turingBot.backRightMotor=hardwareMap.dcMotor.get("backRightMotor");
         turingBot.backLeftMotor=hardwareMap.dcMotor.get("backLeftMotor");
         turingBot.lift=hardwareMap.dcMotor.get("lift");
+        turingBot.leftGrip=hardwareMap.servo.get("leftGrip");
+        turingBot.leftGrip=hardwareMap.servo.get("rightGrip");
 
         // Send telemetry message to signify turingBot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
