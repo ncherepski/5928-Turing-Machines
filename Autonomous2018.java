@@ -62,8 +62,8 @@ import org.firstinspires.ftc.teamcode.BotClass;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-@Disabled
+@Autonomous(name="Autonomous", group="Pushbot")
+
 public class Autonomous2018 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -73,7 +73,7 @@ public class Autonomous2018 extends LinearOpMode {
     static final double     TURN_SPEED              = 0.39;
 
     @Override
-    public void runOpMode() {
+    public void  runOpMode() {
 
         /*
          * Initialize the drive system variables.
@@ -85,7 +85,7 @@ public class Autonomous2018 extends LinearOpMode {
         turingBot.backLeftMotor=hardwareMap.dcMotor.get("backLeftMotor");
         turingBot.lift=hardwareMap.dcMotor.get("lift");
         turingBot.leftGrip=hardwareMap.servo.get("leftGrip");
-        turingBot.leftGrip=hardwareMap.servo.get("rightGrip");
+        turingBot.rightGrip=hardwareMap.servo.get("rightGrip");
 
         // Send telemetry message to signify turingBot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -109,18 +109,30 @@ public class Autonomous2018 extends LinearOpMode {
                 turingBot.backLeftMotor.getCurrentPosition(),
                 turingBot.backRightMotor.getCurrentPosition());
         telemetry.update();
-
+    
         // Wait for the game to start (driver presses PLAY)
 
-
+        waitForStart();
+        
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        turingBot.autoDrive(DRIVE_SPEED,  48.0,  48.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        turingBot.autoDrive(TURN_SPEED,   12.0, -12.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        turingBot.autoDrive(DRIVE_SPEED, -24.0, -24.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        turingBot.grab();
-        turingBot.lift();            // S4: Stop and close the claw.
-             // pause for servos to move
+        turingBot.autoDrive(DRIVE_SPEED,  6.0,  -6.0, -6.0, 6.0); 
+        sleep(2000);
+        turingBot.idleMotor();
+        turingBot.autoDrive(DRIVE_SPEED,  -12.0,  12.0, 12.0, -12.0);
+        sleep(4000);// S1: Forward 47 Inches with 5 Sec timeout
+        turingBot.idleMotor();
+        turingBot.autoDrive(TURN_SPEED,   -12.0, -12.0, 12.0, 12.0); 
+        sleep(2000);// S2: Turn Right 12 Inches with 4 Sec timeout
+        turingBot.idleMotor();
+        turingBot.autoDrive(DRIVE_SPEED, 18.0, -18.0, 18.0, -18.0);
+        sleep(2000);// S3: Reverse 24 Inches with 4 Sec timeout
+        turingBot.idleMotor();
+        turingBot.autoLift();
+        sleep(2000);// S4: Stop and close the claw.
+        turingBot.autoDrive(DRIVE_SPEED, -3.0, 3.0, 3.0, -3.0)
+        turingBot.idleMotor();
+        // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
