@@ -31,6 +31,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.BotClass;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -46,13 +49,16 @@ import org.firstinspires.ftc.teamcode.BotClass;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Template: Iterative OpMode", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Teleop2018", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
 public class Teleop extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private BotClass turingBot = new BotClass();
+    
+    
+    
     // private DcMotor leftMotor = null;
     // private DcMotor rightMotor = null;
 
@@ -73,6 +79,12 @@ public class Teleop extends OpMode
         turingBot.frontLeftMotor=hardwareMap.dcMotor.get("frontLeftMotor");
         turingBot.backRightMotor=hardwareMap.dcMotor.get("backRightMotor");
         turingBot.backLeftMotor=hardwareMap.dcMotor.get("backLeftMotor");
+        turingBot.lift=hardwareMap.dcMotor.get("lift");
+        turingBot.leftGrip=hardwareMap.servo.get("leftGrip");
+        turingBot.rightGrip=hardwareMap.servo.get("rightGrip");
+        
+        
+        
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -101,6 +113,8 @@ public class Teleop extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
+        
+        
 
         double leftY = -gamepad1.left_stick_y;
         double rightY = -gamepad1.right_stick_y;
@@ -108,20 +122,42 @@ public class Teleop extends OpMode
         if (rightY >= .5){
             if (leftY >= .5) {
                 turingBot.forward(0.75); //these forward backward commands run at 75% power
-            } else if (leftY <= -.5){
+            } if (leftY <= -.5){
                 turingBot.leftTurn(0.50); // turns run at 50%
             }
-        } else if (leftY >= .5) {
+        } if (leftY >= .5) {
             if (rightY >= .5) {
                 turingBot.forward(.75); //these forward backward commands run at 75% power
-            } else if (rightY <= -.5) {
+            } if (rightY <= -.5) {
                 turingBot.rightTurn(0.50); // turns run at 50%
             }
-        } else if (leftY <= -.5) {
+        } if (leftY <= -.5) {
             if (rightY <= -.5){
                 turingBot.backward(0.75); //these forward backward commands run at 75% power
             }
         }
+        if (leftY == 0) {
+            if (rightY == 0){
+                turingBot.idleMotor();
+            }
+        }
+        if (gamepad1.dpad_up){
+            turingBot.lift();
+        }
+        if (gamepad1.dpad_down){
+            turingBot.lower();
+        }
+        if(!gamepad1.dpad_down && !gamepad1.dpad_up){
+            turingBot.idleLift();
+        }
+        if (gamepad1.left_bumper){
+            turingBot.release();
+        }
+        if (gamepad1.right_bumper){
+            turingBot.grab();
+        }
+        
+        
     }
 
     /*
