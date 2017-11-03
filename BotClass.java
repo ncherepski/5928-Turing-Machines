@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import java.lang.annotation.Target;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -26,15 +28,36 @@ public class BotClass{
     public DcMotor frontRightMotor;
     public Servo leftGrip;
     public Servo rightGrip;
+    public Servo arm;
     public DcMotor lift;
-    
-
+    public ColorSensor cSensor;
+    public Servo slideServo;
+    public Servo slideGrip;
+    public DcMotor slideSend;
+    public DcMotor slideReturn;
 
     public void grab(){
         leftGrip.setDirection(Servo.Direction.FORWARD);
         rightGrip.setDirection(Servo.Direction.FORWARD);
         leftGrip.setPosition(0.7);
         rightGrip.setPosition(0.3);
+    }
+    
+    public void armDown(){
+        arm.setDirection(Servo.Direction.FORWARD);
+        arm.setPosition(0.001);
+        
+    }
+    public void armUp(){
+        arm.setDirection(Servo.Direction.FORWARD);
+        
+        arm.setPosition(0.7);
+        
+    }
+    
+    public void slideGrab(){
+        slideGrip.setDirection(Servo.Direction.FORWARD);
+        slideGrip.setPosition(0.5);
     }
     
     public void release(){
@@ -44,14 +67,35 @@ public class BotClass{
         rightGrip.setPosition(0.99);
     }
     
-    public void autoLift(){
+    public void slideUp(){
+        slideServo.setDirection(Servo.Direction.FORWARD);
+        
+        slideServo.setPosition(0.001);
+
+    }
+    public void slideDown(){
+        slideServo.setDirection(Servo.Direction.FORWARD);
+        
+        slideServo.setPosition(0.99);
+    }
+    
+    public void slide(double speed){
+        slideSend.setDirection(Servo.Direction.FORWARD);
+        slideReturn.setDirection(Servo.Direction.FORWARD);
+        
+        slideSend.setPower(speed);
+        double halfSpeed = -(speed/2);
+        slideReturn.setPower(halfSpeed);
+    }
+    
+    public void newLift(int inchesRaise){
         double     GEAR_DIAMETER   = 1.75 ;     // For figuring circumference
         double LIFT_GEAR_REDUCTION = .75;
         double     COUNTS_INCH         = (COUNTS_PER_MOTOR_REV * LIFT_GEAR_REDUCTION) /
                 (GEAR_DIAMETER * Math.PI);
         int elevation;
         double speed = 0.01;
-        int inchesRaise = -12;
+        
         // Ensure that the opmode is still active
         // Determine new target position, and pass to motor controller
         elevation = lift.getCurrentPosition() + (int)(inchesRaise * COUNTS_INCH);
@@ -158,7 +202,7 @@ public class BotClass{
         backRightMotor.setPower(speed);
     }
     
-    public void autoDrive(double speed, double frontLeft, double frontRight, double backLeft, double backRight){
+    public void newDrive(double speed, double frontLeft, double frontRight, double backLeft, double backRight){
 
         int newLeftFTarget;
         int newRightFTarget;
@@ -199,4 +243,5 @@ public class BotClass{
         backRightMotor.getCurrentPosition();
 
     }
+    
 }
