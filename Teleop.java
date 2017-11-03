@@ -27,12 +27,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.BotClass;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -56,9 +58,16 @@ public class Teleop extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private BotClass turingBot = new BotClass();
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     
-    
-    
+    static final double     GEAR_DIAMETER   = 1.75 ;     // For figuring circumference
+    static final    double LIFT_GEAR_REDUCTION = .75;
+    static final    double     COUNTS_INCH         = (COUNTS_PER_MOTOR_REV * LIFT_GEAR_REDUCTION) /
+                (GEAR_DIAMETER * Math.PI);
     // private DcMotor leftMotor = null;
     // private DcMotor rightMotor = null;
 
@@ -82,14 +91,21 @@ public class Teleop extends OpMode
         turingBot.lift=hardwareMap.dcMotor.get("lift");
         turingBot.leftGrip=hardwareMap.servo.get("leftGrip");
         turingBot.rightGrip=hardwareMap.servo.get("rightGrip");
+        turingBot.slideSend=hardwareMap.dcMotor.get("slideSend");
+        turingBot.slideReturn=hardwareMap.dcMotor.get("slideReturn");
+        turingBot.slideServo=hardwareMap.servo.get("slideServo");
+        turingBot.slideGrip=hardwareMap.servo.get("slideGrip");
         
+        turingBot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
+        turingBot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         telemetry.addData("Status", "Initialized");
+        
     }
 
     /*
@@ -106,6 +122,8 @@ public class Teleop extends OpMode
     public void start() {
         runtime.reset();
     }
+    
+    
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -143,8 +161,10 @@ public class Teleop extends OpMode
         }
         if (gamepad1.dpad_up){
             turingBot.lift();
+            
         }
         if (gamepad1.dpad_down){
+            
             turingBot.lower();
         }
         if(!gamepad1.dpad_down && !gamepad1.dpad_up){
@@ -156,8 +176,21 @@ public class Teleop extends OpMode
         if (gamepad1.right_bumper){
             turingBot.grab();
         }
-        
-        
+        if (gamepad1.right_trigger > 0.1){
+            turingBot.slide(0.99);
+        }
+        if (gamepad1.left_trigger > 0.1){
+            turingBot.slide(-0.99);
+        }
+        if((gamepad1.left_trigger + gamepad1.right_trigger) < 0.1){
+            turingBot.idleSlide();
+        }
+        if (gamepad1.b){
+            turingBot.slideGrab();
+        }
+        if (gamepad1.y){
+            turingBot.slideRelease();
+        }
     }
 
     /*
