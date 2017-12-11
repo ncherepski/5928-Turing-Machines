@@ -1,8 +1,8 @@
 # 5928
 
 ## Controls:
-* Left Stick: Drivetrain Movements
-* Right Stick X: Drivetrain Rotation
+* GamePad1
+* Left Stick & Right Stick: Drivetrain Rotation
 * Right Trigger: Drivetrain Throttle
 * Right Stick Y: Claws Up/Down
 * DPad Up: Elevator Up
